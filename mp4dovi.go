@@ -18,8 +18,8 @@ var (
 	MinfBoxType = BoxType{'m', 'i', 'n', 'f'}
 	StblBoxType = BoxType{'s', 't', 'b', 'l'}
 	StsdBoxType = BoxType{'s', 't', 's', 'd'}
-	DvheBoxType = BoxType{'d', 'v', 'h', 'e'}
-	Dvh1BoxType = BoxType{'d', 'v', 'h', '1'}
+	Hev1BoxType = BoxType{'h', 'e', 'v', '1'}
+	Hvc1BoxType = BoxType{'h', 'v', 'c', '1'}
 )
 
 const HeaderSize = 8
@@ -67,14 +67,14 @@ func forEachBox(r io.ReadSeeker, limit int64, fn func(header Header) error) (err
 
 func sampleEntryHandler(rw *os.File) func(Header) error {
 	return func(h Header) (err error) {
-		if h.Type == DvheBoxType {
+		if h.Type == Hev1BoxType {
 			if _, err = rw.Seek(-4, io.SeekCurrent); err != nil {
 				return fmt.Errorf(`failed to seek back: %w`, err)
 			}
-			if err = binary.Write(rw, binary.BigEndian, Dvh1BoxType); err != nil {
-				return fmt.Errorf(`failed to write box header type "%s": %w`, Dvh1BoxType, err)
+			if err = binary.Write(rw, binary.BigEndian, Hvc1BoxType); err != nil {
+				return fmt.Errorf(`failed to write box header type "%s": %w`, Hvc1BoxType, err)
 			}
-			fmt.Println(`Changed Dolby Vision codec from dvhe to dvh1`)
+			fmt.Println(`Changed Dolby Vision codec from hev1 to hvc1`)
 		}
 		return
 	}
